@@ -1,4 +1,4 @@
-import edu.berkeley.veloxms.simulator._
+package edu.berkeley.veloxms.simulator
 
 import scala.collection.mutable
 import scala.concurrent.duration.Duration
@@ -12,11 +12,12 @@ import scala.util.Random
  * properties of an algorithm at medium scale, but not useful for larger scales
  * or for testing the computational performance of an actual Velox system.
  */
-object SingleProcessSimulator {
+object SingleProcessSimulationRunner extends SimulationRunner {
   def simulate[U, Q <: VeloxRequest, R <: VeloxResponse, V, O <: VeloxObservation, S <: TimedState](
-    pattern: WorldPattern[Q, V, O, S],
-    duration: Duration,
-    summarizer: SimulationSummarizer[U, Q, R, V]): U = {
+      pattern: WorldPattern[Q, V, O, S],
+      duration: Duration,
+      summarizer: SimulationSummarizer[U, Q, R, V]):
+      U = {
     summarizer.summarize(runEpochs(pattern, duration))
   }
 

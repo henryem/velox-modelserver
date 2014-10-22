@@ -1,4 +1,5 @@
-import edu.berkeley.veloxms.simulator.{VeloxObservation, VeloxResponse, VeloxFrontend, VeloxRequest}
+package edu.berkeley.veloxms.simulator
+
 import org.apache.commons.math3.distribution.ExponentialDistribution
 
 import scala.concurrent.duration.Duration
@@ -65,11 +66,15 @@ trait WorldPattern[Q <: VeloxRequest, V, O <: VeloxObservation, S <: WorldState]
   * This interface actually imposes weaker constraints on possible patterns
   * than might be apparent.  Many apparently-stateful patterns can be
   * implemented by sampling the rate functions for the arrival and marking
-  * processes from a Markov process as a preprocessing step.
+  * processes from a Markov process (which may itself involve state) as a
+  * preprocessing step.
   *
   * The important kind of state we cannot handle efficiently (and which
   * implementors of this interface are barred from using) is state that
-  * depends on the responses from Velox.
+  * depends on the responses from Velox.  In active learning parlance, we
+  * can only simulate an oblivious or stochastic adversary.  In practical
+  * terms, we cannot simulate tasks like load balancing, where the performance
+  * of an action taken by Velox depends on previous actions.
   */
 trait PoissonWorldPattern[Q <: VeloxRequest, V, O <: VeloxObservation]
     extends WorldPattern[Q, V, O, TimedState] {
@@ -86,6 +91,7 @@ trait PoissonWorldPattern[Q <: VeloxRequest, V, O <: VeloxObservation]
   def sample(time: Duration, rand: Random): (Q, V, O)
 }
 
+/** Mixin for PoissonWorldPatterns with constant arrival rates. */
 trait HomogeneousArrivals {
   val arrivalRate: Duration
 

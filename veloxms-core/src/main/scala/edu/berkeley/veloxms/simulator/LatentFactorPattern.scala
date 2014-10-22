@@ -1,5 +1,6 @@
+package edu.berkeley.veloxms.simulator
+
 import edu.berkeley.veloxms.UserID
-import edu.berkeley.veloxms.simulator._
 import org.jblas.DoubleMatrix
 import scala.concurrent.duration.Duration
 import scala.concurrent.duration._
